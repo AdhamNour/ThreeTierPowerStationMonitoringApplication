@@ -1,13 +1,12 @@
-package powerstationnode.powerstation;
+package models.powerstation;
 
-import java.util.*;
-
-import javax.swing.Action;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class PowerStation {
     private ArrayList<Sensor> stationSensors;
     private final String powerStationName ;
-    private final Long stationNumber; 
+    private final String powerStationID; 
 
     public PowerStation(int noOfSensors, String name) {
         stationSensors = new ArrayList<Sensor>();
@@ -15,10 +14,10 @@ public class PowerStation {
             stationSensors.add(new Sensor(25));
         }
         powerStationName = name;
-        stationNumber= (new Random()).nextLong();
+        powerStationID = UUID.randomUUID().toString();
     }
-    public Long getStationNumber(){
-        return stationNumber;
+    public String getID(){
+        return powerStationID;
     }
 
     public int getNumberOfSensors() {
@@ -36,5 +35,9 @@ public class PowerStation {
     }
     public String getPowerPlantName(){
         return powerStationName;
+    }
+    
+    public void removeSensor(int index){
+        stationSensors.remove(index);
     }
 }

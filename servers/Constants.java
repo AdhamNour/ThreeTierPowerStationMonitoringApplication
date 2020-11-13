@@ -1,9 +1,15 @@
 package servers;
 
-public class Constants {
-    public static final String GET_ALL_SENSORS = "GET ALL SENSORS";
-    public static final String END_REQUESTS = "END";
-    public static final String GET_POWER_STATION_NUMBER = "GET POWERSTATION NUMBER";
-    public static final String GET_POWER_STATION_NAME = "GET POWERSTATION NAME";
-    public static final String GET_CERTAIN_SENSOR ="GET SERTAIN SENSOR";
+/**
+ * Constants
+ */
+public enum Constants{
+    GET_ALL_SENSORS_READING_FOR_THE_STATION,
+    GET_NUMBER_OF_SENSORS_FOR_THE_STATION,
+    GET_POWER_STATION_NAME_FOR_THE_STATION,
+    REMOVE_SENSOR_FROM_THE_STATION,
+    GET_ALL_IDS,
+    BEGIN_OF_MESSAGE_STREAM,
+    END_OF_MESSAGE_STREAM,
+    GET_THE_I_TH_SENSOR_FROM_THE_STATION
 }
