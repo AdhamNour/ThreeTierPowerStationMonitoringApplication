@@ -1,13 +1,11 @@
-package Dummies;
 
 import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Random;
+import java.net.*;
+import java.util.*;
 
 import models.Client;
 import servers.Constants;
+import servers.PortNumber;
 
 /**
  * DummyClient
@@ -15,7 +13,7 @@ import servers.Constants;
 public class DummyClient {
 
     public static void main(String[] args) throws UnknownHostException, IOException {
-        Client client = new Client("localhost", 4500);
+        Client client = new Client("localhost", PortNumber.COMPUTING_UNIT_PORT_NUMBER);
         String msg = client.recieveMessage();
         Constants x = Constants.valueOf(msg);
         ArrayList<String> ids = new ArrayList<>();
@@ -30,6 +28,11 @@ public class DummyClient {
                 }
             }
         System.out.println("finished Loading");
+        Serve(client, ids);
+    }
+
+    private static void Serve(Client client, ArrayList<String> ids) throws IOException {
+        String msg;
         Constants[] testers = { Constants.GET_ALL_SENSORS_READING_FOR_THE_STATION,
                 Constants.GET_NUMBER_OF_SENSORS_FOR_THE_STATION, Constants.GET_POWER_STATION_NAME_FOR_THE_STATION };
         Random rand = new Random();
@@ -58,6 +61,18 @@ public class DummyClient {
                 client.sendMessage(Integer.toString(i));
                 msg = client.recieveMessage();
                 System.out.println(msg);
+                if (Float.parseFloat(msg) < 10) {
+                    client.sendMessage(Constants.SET_THE_MAX_VALUE_OF_I_TH_SENSOR_OF_THE_STATION.toString());
+                    client.sendMessage(stationID);
+                    client.sendMessage(Integer.toString(i));
+                    client.sendMessage(Float.toString(rand.nextFloat()%101));
+                }
+                if (Float.parseFloat(msg) > 10) {
+                    client.sendMessage(Constants.SET_THE_MAX_VALUE_OF_I_TH_SENSOR_OF_THE_STATION.toString());
+                    client.sendMessage(stationID);
+                    client.sendMessage(Integer.toString(i));
+                    client.sendMessage(Float.toString(-1*rand.nextFloat()%101));
+                }
             }
             
             long start = System.currentTimeMillis();

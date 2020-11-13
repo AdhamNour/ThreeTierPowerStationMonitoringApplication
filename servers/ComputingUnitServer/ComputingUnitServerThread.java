@@ -1,5 +1,6 @@
 package servers.ComputingUnitServer;
 
+import java.io.Console;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import models.Client;
 import servers.AbstractServerThread;
 import servers.Constants;
+import servers.PortNumber;
 
 /**
  * ComputingUnitServerThread
@@ -29,7 +31,7 @@ public class ComputingUnitServerThread extends AbstractServerThread {
         super.run();
         try {
             System.out.println("loading the IDs of the station from the power station server ...");
-            Client powerStationServerClient = new Client("localhost", 5000);
+            Client powerStationServerClient = new Client("localhost", PortNumber.POWER_STATION_PORT_NUMBER);
             String pwMsg = powerStationServerClient.recieveMessage();
             client.sendMessage(pwMsg);
 
@@ -46,35 +48,54 @@ public class ComputingUnitServerThread extends AbstractServerThread {
                     }
                 }
             System.out.println("finished Loading");
-            String myClientMessage;
-            while (true) {
-                myClientMessage = client.recieveMessage();
-                x = gettingOrderType(x, myClientMessage);
-                myClientMessage = client.recieveMessage();
-                if (x.equals(Constants.GET_NUMBER_OF_SENSORS_FOR_THE_STATION)
-                        || x.equals(Constants.GET_POWER_STATION_NAME_FOR_THE_STATION)) {
-                    powerStationServerClient.sendMessage(x.toString());
-                    powerStationServerClient.sendMessage(myClientMessage);
-                    pwMsg = powerStationServerClient.recieveMessage();
-                    client.sendMessage(pwMsg);
-                }
-                if (x.equals(Constants.GET_ALL_SENSORS_READING_FOR_THE_STATION)) {
-                    client.sendMessage(getAllSensorsReadingsforTheStation(powerStationServerClient, myClientMessage).toString());
-                }
-                if (x.equals(Constants.GET_THE_I_TH_SENSOR_FROM_THE_STATION)) {
-                    getAllSensorsReadingsforTheStation(powerStationServerClient, myClientMessage);
-                    String i = client.recieveMessage();
-                    int index = Integer.parseInt(i);
-                    String result = Float
-                            .toString(sensorAverages.get(myClientMessage).get(index) / nos_calls.get(myClientMessage));
-                    client.sendMessage(result);
-                }
-
-            }
+            Serve(powerStationServerClient, x);
         } catch (IOException e) {
             System.out.println("Connection with The Power Station Server is lost");
         }
 
+    }
+
+    private void Serve(Client powerStationServerClient, Constants x) throws IOException {
+        String pwMsg;
+        String myClientMessage;
+        while (true) {
+            myClientMessage = client.recieveMessage();
+            x = gettingOrderType(x, myClientMessage);
+            myClientMessage = client.recieveMessage();
+            if (x.equals(Constants.GET_NUMBER_OF_SENSORS_FOR_THE_STATION)
+                    || x.equals(Constants.GET_POWER_STATION_NAME_FOR_THE_STATION)) {
+                powerStationServerClient.sendMessage(x.toString());
+                powerStationServerClient.sendMessage(myClientMessage);
+                pwMsg = powerStationServerClient.recieveMessage();
+                client.sendMessage(pwMsg);
+            }
+            if (x.equals(Constants.GET_ALL_SENSORS_READING_FOR_THE_STATION)) {
+                client.sendMessage(getAllSensorsReadingsforTheStation(powerStationServerClient, myClientMessage).toString());
+            }
+            if (x.equals(Constants.GET_THE_I_TH_SENSOR_FROM_THE_STATION)) {
+                getAllSensorsReadingsforTheStation(powerStationServerClient, myClientMessage);
+                String i = client.recieveMessage();
+                int index = Integer.parseInt(i);
+                String result = Float
+                        .toString(sensorAverages.get(myClientMessage).get(index) / nos_calls.get(myClientMessage));
+                client.sendMessage(result);
+            }
+            if (x.equals(Constants.SET_THE_MAX_VALUE_OF_I_TH_SENSOR_OF_THE_STATION)) {
+                System.out.println("forwarding to the powerstation");
+                String i = client.recieveMessage();
+                System.out.println("The Index is\n\t"+i);
+
+                String value = client.recieveMessage();
+                System.out.println("The Index is\n\t"+value);
+
+
+                powerStationServerClient.sendMessage(x.toString());
+                powerStationServerClient.sendMessage(myClientMessage);
+                powerStationServerClient.sendMessage(i);
+                powerStationServerClient.sendMessage(value);
+            }
+
+        }
     }
 
     private Constants gettingOrderType(Constants x, String myClientMessage) throws IOException {

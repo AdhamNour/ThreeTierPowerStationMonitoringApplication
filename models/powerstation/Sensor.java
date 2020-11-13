@@ -20,6 +20,6 @@ public class Sensor {
     }
 
     public void setMaxReading(float MaxReading){
-        this.maxReading =MaxReading;
+        this.maxReading =Math.max(MaxReading, 2);
     }
 }

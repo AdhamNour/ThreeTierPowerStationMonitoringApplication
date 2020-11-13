@@ -51,4 +51,7 @@ public class StationsController {
         }
         return result;
     }
+    public void setSensorMaxValueForTheSensor(String stationID,int i , float maxValue){
+        stations.get(stationID).setSensorMaxValue(i, maxValue);
+    }
 }

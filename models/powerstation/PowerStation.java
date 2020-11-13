@@ -40,4 +40,7 @@ public class PowerStation {
     public void removeSensor(int index){
         stationSensors.remove(index);
     }
+    public void setSensorMaxValue(int i,float maxValue){
+        stationSensors.get(i).setMaxReading(maxValue);
+    }
 }

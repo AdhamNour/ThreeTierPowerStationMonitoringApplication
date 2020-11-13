@@ -45,15 +45,24 @@ public class PowerStationServerThread extends AbstractServerThread {
                 switch (orderType) {
                     case GET_ALL_SENSORS_READING_FOR_THE_STATION:
                         stationID = client.recieveMessage();
-                        client.sendMessage(stationsController.getAllSensorsReadingForTheStation(stationID).toString());;
+                        client.sendMessage(stationsController.getAllSensorsReadingForTheStation(stationID).toString());
+                        ;
                         break;
                     case GET_NUMBER_OF_SENSORS_FOR_THE_STATION:
                         stationID = client.recieveMessage();
-                        client.sendMessage(Integer.toString(stationsController.getNumberofSensorForTheStation(stationID)));;
+                        client.sendMessage(
+                                Integer.toString(stationsController.getNumberofSensorForTheStation(stationID)));
+                        
                         break;
                     case GET_POWER_STATION_NAME_FOR_THE_STATION:
                         stationID = client.recieveMessage();
                         client.sendMessage(stationsController.getPowerStationNameForTheStation(stationID));
+                        break;
+                    case SET_THE_MAX_VALUE_OF_I_TH_SENSOR_OF_THE_STATION:
+                        stationID = client.recieveMessage();
+                        int i = Integer.parseInt(client.recieveMessage());
+                        float maxValue = Float.parseFloat(client.recieveMessage());
+                        stationsController.setSensorMaxValueForTheSensor(stationID, i, maxValue);
                         break;
 
                     default:

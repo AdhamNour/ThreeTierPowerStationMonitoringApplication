@@ -9,12 +9,13 @@ import java.util.Random;
 
 import models.Client;
 import servers.Constants;
+import servers.PortNumber;
 
 public class ComputingUnitServer {
     public static void main(String[] args) throws UnknownHostException, IOException {
 
         try {
-            ServerSocket computingUnitServerSocket = new ServerSocket(4500);
+            ServerSocket computingUnitServerSocket = new ServerSocket(PortNumber.COMPUTING_UNIT_PORT_NUMBER);
             while (true) {
                 Socket clientSocket = computingUnitServerSocket.accept();
                 (new ComputingUnitServerThread(clientSocket)).start();
